@@ -15,10 +15,8 @@ rules = [
 ]
 text = "The quick brown fox jumps over the lazy dog"
 words = nltk.word_tokenize(text)
-
 tagged_words = []
 for word in words:
     tag = apply_rule(word, 'NN', rules)
     tagged_words.append((word, tag))
-
 print(tagged_words)
