@@ -1,47 +1,31 @@
 import random
-def train_pos_tagger(sentences):
-    """
-    Train a simple stochastic part-of-speech tagger based on a basic probabilistic model.
-    Returns a dictionary where keys are words and values are dictionaries of POS tags with their probabilities.
-    """
-    word_tag_counts = {}
-    for sentence in sentences:
-        for word, tag in sentence:
-            if word not in word_tag_counts:
-                word_tag_counts[word] = {}
-            if tag not in word_tag_counts[word]:
-                word_tag_counts[word][tag] = 0
-            word_tag_counts[word][tag] += 1
-    
-    word_tag_probabilities = {}
-    for word, tag_counts in word_tag_counts.items():
-        total_count = sum(tag_counts.values())
-        probabilities = {tag: count/total_count for tag, count in tag_counts.items()}
-        word_tag_probabilities[word] = probabilities
-    
-    return word_tag_probabilities
-def stochastic_pos_tagging(sentence, word_tag_probabilities):
-    """
-    Assign POS tags to words in a sentence using a simple stochastic tagging algorithm.
-    """
-    tagged_sentence = []
-    for word in sentence:
-        if word in word_tag_probabilities:
-            tag_probabilities = word_tag_probabilities[word]
-            selected_tag = random.choices(list(tag_probabilities.keys()), list(tag_probabilities.values()))[0]
+class StochasticPOSTagger:
+    def __init__(self, training_corpus):
+        self.word_tag_probabilities = self.calculate_probabilities(training_corpus)
+    def calculate_probabilities(self, training_corpus):
+        word_tag_counts = {}
+        tag_counts = {}
+        for sentence in training_corpus:
+            for word, tag in sentence:
+                word_tag_counts[(word, tag)] = word_tag_counts.get((word, tag), 0) + 1
+                tag_counts[tag] = tag_counts.get(tag, 0) + 1
+        word_tag_probabilities = {pair: count / tag_counts[pair[1]] for pair, count in word_tag_counts.items()}
+        return word_tag_probabilities
+    def tag_sentence(self, sentence):
+        tagged_sentence = []
+        for word in sentence:
+            possible_tags = [tag for (w, tag) in self.word_tag_probabilities.keys() if w == word]
+            if possible_tags:
+                selected_tag = random.choice(possible_tags)
+            else:
+                selected_tag = 'NOUN'
             tagged_sentence.append((word, selected_tag))
-        else:
-            tagged_sentence.append((word, 'NN'))     
-    return tagged_sentence
-num_sentences = int(input("Enter the number of sentences: "))
-sentences = []
-for i in range(num_sentences):
-    sentence_str = input(f"Enter sentence {i+1} (word/tag pairs separated by slash or space): ")
-    words_tags = [pair.split('/') if '/' in pair else pair.split() for pair in sentence_str.split()]
-    sentences.append(words_tags)
-word_tag_probabilities = train_pos_tagger(sentences)
-sentence_input = input("Enter a sentence to tag: ")
-sentence = sentence_input.split()
-tagged_sentence = stochastic_pos_tagging(sentence, word_tag_probabilities)
-print("Tagged sentence:")
+        return tagged_sentence
+training_corpus = [
+    [('The', 'DET'), ('cat', 'NOUN'), ('is', 'VERB'), ('on', 'PREP'), ('the', 'DET'), ('mat', 'NOUN')],
+    [('A', 'DET'), ('dog', 'NOUN'), ('is', 'VERB'), ('running', 'VERB')]
+]
+tagger = StochasticPOSTagger(training_corpus)
+new_sentence = ['The', 'dog', 'is', 'running']
+tagged_sentence = tagger.tag_sentence(new_sentence)
 print(tagged_sentence)
