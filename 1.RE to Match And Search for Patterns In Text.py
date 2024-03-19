@@ -3,8 +3,11 @@ def main():
     text = input("Enter some text: ")
     pattern = r'\b[Aa]\w+'
     matches = re.findall(pattern, text)
-    print("Words starting with 'A' or 'a':")
-    for match in matches:
-        print(match)
+    if matches:
+      print("Matches found")
+      for a in matches:
+          print(a)
+    else:
+        print("No Matches found")
 if __name__ == "__main__":
     main()
