@@ -1,10 +1,6 @@
 import nltk
 from nltk.tokenize import word_tokenize
-
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
-text = "this is a cat"
+from nltk import pos_tagtext = "this is a cat"
 
 tokens = word_tokenize(text)
 
