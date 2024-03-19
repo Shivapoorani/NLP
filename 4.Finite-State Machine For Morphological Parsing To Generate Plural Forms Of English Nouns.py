@@ -1,19 +1,8 @@
-import re
-
-def pluralize(word):
-    rules = [
-        ['[sxz]$', '$', 'es'],
-        ['[^aeioudgkprt]h$', '$', 'es'],
-        ['(qu|[^aeiou])y$', 'y$', 'ies'],
-        ['$', '$', 's']
-    ]
-
-    for rule in rules:
-        pattern, search, replace = rule
-        if re.search(pattern, word):
-            return re.sub(search, replace, word)
-
-print(pluralize("cat"))  
-print(pluralize("dog"))  
-print(pluralize("knife"))  
-print(pluralize("potato"))  
+words=['cat','dog','man','bus']
+for i in words:
+    if i.endswith('t') or i.endswith('g'):
+        print(i+'s')
+    elif(i=='man'):
+        print("men")
+    else:
+        print(i+'es')
