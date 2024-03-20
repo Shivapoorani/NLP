@@ -1,7 +1,7 @@
 import nltk
 from nltk.tokenize import word_tokenize
-from nltk import pos_tagtext = "this is a cat"
-
+from nltk import pos_tag
+text = input("Enter the Text: ")
 tokens = word_tokenize(text)
 
 pos_tags = nltk.pos_tag(tokens)
