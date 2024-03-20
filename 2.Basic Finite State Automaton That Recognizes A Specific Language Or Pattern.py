@@ -7,7 +7,5 @@ def match(string):
             state = 2
     return state == 2
 
-print(match("hello world"))  
-print(match("ab"))  
-print(match("aab"))  
-print(match("abab"))
+word=input("enter word:")
+print(match(word))
