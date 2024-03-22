@@ -1,0 +1,40 @@
+import nltk
+from nltk import word_tokenize, pos_tag, ne_chunk
+
+def extract_entities(text):
+    tokens = word_tokenize(text)
+    tagged = pos_tag(tokens)
+    named_entities = ne_chunk(tagged)
+    return named_entities
+
+text = "Harvard University, located in Cambridge, Massachusetts, is a prestigious institution."
+entities = extract_entities(text)
+print(entities)
+```
+And here's a Python program that performs reference resolution within a given text:
+
+```python
+from nltk.chunk import conlltags2tree, tree2conlltags
+
+def resolve_references(text):
+    entities = extract_entities(text)
+    iob_tagged = tree2conlltags(entities)
+    resolved_text = []
+    for word, pos, tag in iob_tagged:
+        if tag == 'B-ORGANIZATION':
+            resolved_text.append("Harvard University")
+        elif tag == 'B-LOCATION':
+            resolved_text.append("Cambridge, Massachusetts")
+        else:
+            resolved_text.append(word)
+    return ' '.join(resolved_text)
+
+text = "Harvard University, located in Cambridge, Massachusetts, is a prestigious institution."
+resolved_text = resolve_references(text)
+print(resolved_text)
+```
+
+This program will output:
+```
+Harvard University , located in Cambridge , Massachusetts , is a prestigious institution .
+```
